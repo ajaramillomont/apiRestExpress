@@ -13,13 +13,13 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 
 //Dar acceso a la api solo a entidades conocidas
-const whiteList = ['http://127.0.0.1:5501', 'http://127.0.0.1:1200'];
+const whiteList = ['http://127.0.0.1:5501', 'http://127.0.0.1:1200', 'http://localhost:2500'];
 const options = {
   origin: (origin, callback) => {
-    if(whiteList.includes(origin)) {
+    if(!origin || whiteList.includes(origin)) {
       callback(null, true);
     }else {
-      callback(new Error('no permitido'));
+      callback(new Error('CORS: Origen no permitido'));
     }
   }
 }
