@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors');
 require('dotenv').config();
 
 const routerApi = require('./routes')
@@ -10,6 +11,19 @@ const port = process.env.PORT || 4000;
 
 //antes de usar post
 app.use(express.json());
+
+//Dar acceso a la api solo a entidades conocidas
+const whiteList = ['http://127.0.0.1:5501/frontend.html', 'http://127.0.0.1:1200/frontend.html'];
+const options = {
+  origin: (origin, callback) => {
+    if(whiteList.includes(origin)) {
+      callback(null, true);
+    }else {
+      callback(new Error('no permitido'));
+    }
+  }
+}
+app.use(cors(options));
 
 app.get('/', (req, res)=> {
   res.send('Hola, este es mi primer servidor con express')
