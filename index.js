@@ -13,10 +13,10 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 
 //Dar acceso a la api solo a entidades conocidas
-const whiteList = ['http://127.0.0.1:5501/frontend.html', 'http://127.0.0.1:1200/frontend.html'];
+const whiteList = ['http://127.0.0.1:5501', 'http://127.0.0.1:1200'];
 const options = {
   origin: (origin, callback) => {
-    if(!origin || whiteList.includes(origin)) {
+    if(whiteList.includes(origin)) {
       callback(null, true);
     }else {
       callback(new Error('no permitido'));
