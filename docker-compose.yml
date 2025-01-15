@@ -5,7 +5,7 @@ services:
     image: postgres:15
     environment:
       - POSTGRES_DB=tienda
-      - POSTGRES-USER=postgres
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=ANDres1988
     ports:
       - 5432:5432
