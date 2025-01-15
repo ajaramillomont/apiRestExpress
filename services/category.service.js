@@ -1,11 +1,13 @@
 const { faker } = require('@faker-js/faker');
+const pool = require('../libs/postgres.pool');
 
 class CategoriesService {
 
   constructor() {
     this.categories = [];
     this.generate();
-
+    this.pool = pool;
+    this.pool.on('error', (err) => console.log(err));
   }
 
   generate() {
@@ -27,11 +29,9 @@ class CategoriesService {
   }
 
    async find() {
-    return new Promise((resolve, reject)=> {
-      setTimeout(() => {
-        resolve(this.categories);
-      }, 2000)
-    })
+    const query = 'SELECT * FROM tasks';
+    const rta = await this.pool.query(query);
+    return rta.rows;
   }
 
   async findOne(id) {
