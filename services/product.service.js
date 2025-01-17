@@ -33,9 +33,10 @@ class ProductsService {
 
   async find() {
     const query = 'SELECT * FROM tasks';
-    const rta = await sequelize.query(query);
-    return rta.rows;
-  }
+    const [ data ] = await sequelize.query(query);
+    return data;
+  };
+
   async findOne(id) {
     const product = this.products.find(item => item.id === id);
     if( !product ) {
