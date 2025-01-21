@@ -1,10 +1,10 @@
 const { allow } = require('joi');
+
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-const USER_TABLE = 'users';
+const CUSTOMER_TABLE = 'customers';
 
-//esquema
-const UserSchema = {
+const CustomerSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -12,21 +12,25 @@ const UserSchema = {
     type: DataTypes.INTEGER
   },
 
-  email: {
+  name: {
     allowNull: false,
-    type: DataTypes.STRING,
-    unique: true
+    type: DataTypes.STRING
   },
 
-  password: {
+  lastName: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    field: 'last_name'
+  },
+
+  address: {
     allowNull: false,
     type: DataTypes.STRING,
   },
 
-  role: {
+  phone: {
     allowNull: false,
-    type: DataTypes.STRING,
-    defaultValue: 'customer'
+    type: DataTypes.STRING
   },
 
   createdAt: {
@@ -37,20 +41,19 @@ const UserSchema = {
   }
 }
 
-class User extends Model {
-  static associate() {
-    //associate
+class Customer extends Model {
+  static associate () {
 
   }
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE,
-      modelName: 'User',
+      tableName: CUSTOMER_TABLE,
+      modelName: 'Customer',
       timestamps: false
     }
   }
 }
 
-module.exports = { USER_TABLE, UserSchema, User };
+module.exports = { CUSTOMER_TABLE, CustomerSchema, Customer };

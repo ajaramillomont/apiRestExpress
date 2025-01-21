@@ -15,8 +15,4 @@ const sequelize = new Sequelize(URI, {
 
 setupModels(sequelize);
 
-if(process.env.NODE_ENV !== 'production') {
-  sequelize.sync();
-}
-
 module.exports = sequelize;

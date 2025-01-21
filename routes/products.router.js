@@ -31,10 +31,14 @@ router.get('/:id',
 
 router.post('/',
   validatorsHandler(createProductSchema, 'body'),
-  async(req, res) => {
-    const body = req.body;
-    const product = await productsService.create(body);
-    res.status(201).json({message: 'Created', data: product});
+  async(req, res, next) => {
+    try {
+      const body = req.body;
+      const newProduct = await productsService.create(body);
+      res.status(201).json(newProduct);
+    } catch (error) {
+      next(error);
+    }
 });
 
 router.patch('/:id',

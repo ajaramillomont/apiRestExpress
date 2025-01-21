@@ -1,5 +1,7 @@
 const express = require('express');
 const CategoriesService = require('../services/category.service');
+const validatorsHandler = require('../middlewares/validator.handler');
+const { createCategorychema, updateCategorySchema, getCategorySchema } = require("../schemas/category.schema")
 
 const router = express.Router();
 
@@ -16,12 +18,17 @@ router.get('/:id', async(req, res) => {
   res.json(categories);
 })
 
-router.post('/', (req, res) => {
-  const body = req.body;
-  console.log(body);
-  const category = categoryService.create(body);
-  res.status(201).json({message: 'Created', data: category});
-})
+router.post('/',
+  validatorsHandler(createCategorychema),
+  async(req, res, next) => {
+    try {
+      const body = req.body;
+      const newCategory = await categoryService.create(body);
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
+});
 
 router.patch('/:id', async(req, res) => {
   try {
