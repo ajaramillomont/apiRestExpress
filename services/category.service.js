@@ -1,67 +1,42 @@
-const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
-const sequelize = require('../libs/sequelize');
+
+const { models } = require('../libs/sequelize');
 
 class CategoriesService {
-
   constructor() {
-    this.categories = [];
-    this.generate();
   }
 
-  generate() {
-    for (let index = 0; index < 5; index++) {
-      this.categories.push({
-        id: faker.string.uuid(),
-        name: faker.commerce.department(),
-      })
-    }
-  }
-
-  async create(data) {
-    const newCategory = {
-      id: faker.string.uuid(),
-      ...data
-    }
-    this.categories.push(newCategory);
+  async create (data) {
+    const newCategory = await models.Category.create(data);
     return newCategory;
-  }
+  };
 
-   async find() {
-    const query = 'SELECT * FROM tasks';
-    const [ data ] = await sequelize.query(query);
-    return data;
-  }
+  async find() {
+    const categories = await models.Category.findAll();
+    return categories;
+  };
 
   async findOne(id) {
-    return this.categories.find(item => item.id === id);
-  }
+    const category = await models.Category.findByPk(id, {
+      include: ['products']
+    });
+    if(!category) {
+      throw boom.notFound('Category not found');
+    }
+    return category;
+  };
 
   async update(id, changes) {
-    const index = this.categories.findIndex(item => item.id === id);
-    if(index === -1) {
-      throw new Error("category not found");
-    }
-
-    const category = this.categories[index];
-    this.categories[index] = {
-      ...category,
-      ...changes
-    }
-    return this.categories[index];
-  }
+    const category = await this.findOne(id);
+    const rta = await category.update(changes);
+    return rta;
+  };
 
   async delete(id) {
-    const index = this.categories.findIndex(item => item.id === id);
-    if(index === -1) {
-      throw new Error('This category not exist');
-    }
-
-    this.categories.splice(index, 1);
-    return { id }
-
+    const category = await this.findOne(id);
+    await category.destroy();
+    return { id };
   }
-
 }
 
 module.exports = CategoriesService;

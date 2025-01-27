@@ -1,20 +1,22 @@
 const boom = require('@hapi/boom');
 
 const { models } = require('../libs/sequelize');
-const { custom } = require('joi');
 
 class CustomersService {
   constructor() {
-
   }
 
   async create (data) {
-    const newCustomer = await models.Customer.create(data);
+    const newCustomer = await models.Customer.create(data, {
+      include: ['user']
+    });
     return newCustomer;
   };
 
   async find() {
-    const rta = await models.Customer.findAll();
+    const rta = await models.Customer.findAll({
+      include: ['user']
+    });
     return rta;
   };
 

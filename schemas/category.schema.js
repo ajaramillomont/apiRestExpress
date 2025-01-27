@@ -15,6 +15,7 @@ const updateCategorySchema = Joi.object({
   name: name,
   description: description,
   tipo: tipo,
+  id
 });
 
 const getCategorySchema = Joi.object({

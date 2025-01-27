@@ -1,23 +1,9 @@
-const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
 
 class UsersService {
 
   constructor() {
-
-    this.users = [];
-    this.generate();
-  }
-
-  generate() {
-    for (let index = 0; index < 3; index++) {
-      this.users.push({
-        id: faker.string.uuid(),
-        username: faker.internet.username(),
-        password: faker.internet.password()
-      })
-    }
   }
 
   async create(data) {
@@ -26,7 +12,9 @@ class UsersService {
   }
 
   async find() {
-    const rta = await models.User.findAll();
+    const rta = await models.User.findAll({
+      include: ['customer']
+    });
     return rta;
   }
 

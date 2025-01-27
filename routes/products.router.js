@@ -2,15 +2,21 @@ const express = require('express');
 
 const ProductsService = require('../services/product.service');
 const validatorsHandler = require('../middlewares/validator.handler');
-const { createProductSchema, updateProductSchema, getProductSchema}  = require('../schemas/product.schema');
+const { createProductSchema, updateProductSchema, getProductSchema, queryProductSchema}  = require('../schemas/product.schema');
 
 
 const router = express.Router();
 const productsService  = new ProductsService();
 
-router.get('/', async(req, res) => {
-  const products = await productsService.find();
-  res.json(products);
+router.get('/',
+  validatorsHandler(queryProductSchema, 'query'),
+  async(req, res, next) => {
+    try {
+      const products = await productsService.find(req.query);
+      res.json(products);
+    } catch (error) {
+      next(error);
+    }
 });
 
 router.get('/filter', (req, res) => {
@@ -55,11 +61,16 @@ router.patch('/:id',
   }
 });
 
-router.delete('/:id', async(req, res) => {
-  const { id } = req.params;
-  const product = await productsService.delete(id);
-
-  res.status(200).json({message: 'deleted', id: id});
+router.delete('/:id',
+  validatorsHandler(getProductSchema, 'params'),
+  async(req, res, next) => {
+    try {
+      const { id } = req.params;
+      const product = await productsService.delete(id);
+      res.status(200).json({message: 'deleted', data: product})
+    } catch (error) {
+      next(error);
+    }
 })
 
 module.exports = router;

@@ -2,6 +2,8 @@ const { allow } = require('joi');
 
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
+const { USER_TABLE } = require('../models/user.model');
+
 const CUSTOMER_TABLE = 'customers';
 
 const CustomerSchema = {
@@ -38,12 +40,30 @@ const CustomerSchema = {
     type: DataTypes.DATE,
     field: 'create_at',
     defaultValue: Sequelize.NOW
+  },
+
+  userId: {
+    field: 'user_id',
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    unique: true,
+    references: {
+      model: USER_TABLE,
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   }
 }
 
 class Customer extends Model {
-  static associate () {
-
+  static associate (models) {
+    //aquí lo que hacemos es decir que un usuario pertenece a un cliente
+    this.belongsTo(models.User, {as: 'user'});
+    this.hasMany(models.Order, {
+      as: 'orders',
+      foreignKey: 'customerId'
+    })
   }
 
   static config(sequelize) {
