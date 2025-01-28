@@ -6,7 +6,6 @@ const config = {
   databaseUrl: process.env.DATABASE_URL || "",
 };
 
-// ✅ Verificar si DATABASE_URL está definida
 if (!config.databaseUrl) {
   console.error("ERROR: DATABASE_URL no está definida. Revisa tu archivo .env.");
   process.exit(1);
