@@ -4,7 +4,7 @@ const { config } = require('./../config/config');
 
 const setupModels = require('./../db/models');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(config.databaseUrl, {
   dialect: 'postgres',
   logging: (msg) => console.log(`[Sequelize]: ${msg}`),
   dialectOptions: {
