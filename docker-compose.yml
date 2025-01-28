@@ -38,31 +38,6 @@ services:
     depends_on:
       - postgresql
 
-  mysql:
-    image: mysql:8.3.0
-    environment:
-      - MYSQL_DATABASE=tienda
-      - MYSQL_USER=root
-      - MYSQL_ROOT_PASSWORD=ANDres1988
-      - MYSQL_PORT=3306
-    ports:
-    - 3306:3306
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-    networks:
-      - app_network
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - MYSQL_ROOT_PASSWORD=ANDres1988
-      - PMA_HOST=mysql
-    ports:
-      - 8080:80
-    networks:
-      - app_network
-
-
 networks:
   app_network:
     driver: bridge
